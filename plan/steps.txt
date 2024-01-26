@@ -1,0 +1,16 @@
+the graphql schema is given
+
+start with a root
+
+split by type
+    that leaves us with different schemas
+    for each schema
+        get the schemaName
+        add that to the root
+        get the fields string
+        split the fields string by, and you get fields
+
+        for each field
+            split the field by :
+            first is the key, second is the value
+
