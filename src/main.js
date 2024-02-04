@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as fse from "fs-extra";
 import path, {dirname} from "path";
+import _ from "lodash";
 import {logSpreaded} from "./utils/consoleLogger.js";
 import {config} from "../config.js";
 import {getUnifiedSchemaFromGraphQl} from "./generators/gql/graphqlToJson.js";
@@ -9,7 +10,7 @@ import {cleanObjects} from "./utils/objectCleaner.js";
 
 export const transformSchema = (shadowConfig = []) => {
   shadowConfig.map(thisConfig => {
-    const {outputSchemaType = 'json', cleanUpObjects = [], inputFilePath='', outputFilePath='' } = thisConfig;
+    const {outputSchemaType = 'json', finalObjects = [], inputFilePath='', outputFilePath='' } = thisConfig;
 
     const inputFileAbsPath = path.resolve(inputFilePath);
     const outputFileAbsPath = path.resolve(outputFilePath);
@@ -26,7 +27,7 @@ export const transformSchema = (shadowConfig = []) => {
       outputSchemaType
     });
 
-    schema = cleanObjects({schema, cleanUpObjects});
+    schema = _.pick(schema, finalObjects);
 
     fse.default.writeJsonSync(outputFileAbsPath, schema, {spaces: 2});
 
@@ -52,4 +53,4 @@ export const transformSchema = (shadowConfig = []) => {
   logSpreaded(schema);*/
 };
 
-transformSchema(config);
+transformSchema(config.schemaConfigs);
